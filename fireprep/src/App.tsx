@@ -3,32 +3,11 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { useState, FormEvent, useRef } from 'react';
+import { useState, FormEvent } from 'react';
 import { ChevronRight } from 'lucide-react';
-import { motion, useScroll, useTransform, useMotionValueEvent } from 'motion/react';
 
 export default function App() {
   const [email, setEmail] = useState('');
-  const videoSectionRef = useRef<HTMLElement>(null);
-  const videoElementRef = useRef<HTMLVideoElement>(null);
-
-  const { scrollYProgress } = useScroll({
-    target: videoSectionRef,
-    offset: ["start end", "end start"]
-  });
-
-  const videoScale = useTransform(scrollYProgress, [0, 0.5, 1], [1, 1.1, 1.2]);
-  const videoOpacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0.5, 1, 1, 0.5]);
-
-  // Sync scroll to video time
-  useMotionValueEvent(scrollYProgress, "change", (latest) => {
-    if (videoElementRef.current) {
-      const duration = videoElementRef.current.duration;
-      if (duration > 0 && isFinite(duration)) {
-        videoElementRef.current.currentTime = latest * duration;
-      }
-    }
-  });
 
   const handleSignUp = (e: FormEvent) => {
     e.preventDefault();
@@ -54,14 +33,12 @@ export default function App() {
         </div>
       </nav>
 
-      {/* Hero Section - Above the Fold */}
+      {/* Hero Section */}
       <section className="relative h-screen min-h-[40rem] flex items-center justify-center overflow-hidden border-b border-white/5 bg-navy">
-        {/* Background Grid */}
         <div className="absolute inset-0 grid-pattern opacity-50" />
         
         <div className="relative z-10 w-full max-w-[90rem] mx-auto px-6 md:px-12 h-full flex items-center">
           <div className="grid lg:grid-cols-2 gap-12 items-center w-full">
-            {/* Left Column: Content */}
             <div className="space-y-8 mt-12 lg:mt-0">
               <div className="font-mono text-[10px] text-amber-accent/50 tracking-[0.3em] uppercase">
                 [ Protocol: Active Preparation ]
@@ -102,7 +79,6 @@ export default function App() {
               </div>
             </div>
 
-            {/* Right Column: Hero Image */}
             <div className="hidden lg:block relative h-[60vh] w-full self-end overflow-hidden">
               <img 
                 src="https://rsxtgvhubpuujtdsbvtj.supabase.co/storage/v1/object/public/landing%20page/Screenshot%202026-04-19%20at%209.04.21%20AM.png" 
@@ -123,7 +99,6 @@ export default function App() {
           </div>
         </div>
 
-        {/* Scroll Indicator */}
         <div className="absolute bottom-8 left-1/2 -translate-x-1/2">
           <div className="flex flex-col items-center gap-2 opacity-30">
             <span className="font-mono text-[8px] uppercase tracking-[0.3em]">Scroll</span>
@@ -132,13 +107,11 @@ export default function App() {
         </div>
       </section>
 
-      {/* Section 2: Challenge & Solution - Sleek Card Design */}
+      {/* Challenge & Solution */}
       <section className="relative py-24 md:py-32 px-6 md:px-12 bg-navy border-y border-white/5">
         <div className="max-w-[85rem] mx-auto grid md:grid-cols-2 gap-8 md:gap-12">
-          {/* Card: The Challenge */}
           <div className="bg-white/[0.02] border border-white/5 p-10 md:p-14 flex flex-col gap-12 group hover:bg-white/[0.04] transition-all duration-500">
             <h2 className="text-3xl md:text-5xl text-white">The Challenge</h2>
-            
             <div className="space-y-10">
               <div className="space-y-3">
                 <div className="w-8 h-px bg-red-500/30 group-hover:w-16 transition-all duration-700" />
@@ -161,11 +134,9 @@ export default function App() {
             </div>
           </div>
 
-          {/* Card: The Solution */}
           <div className="bg-white/[0.03] border border-amber-accent/20 p-10 md:p-14 flex flex-col gap-12 group hover:bg-white/[0.05] transition-all duration-500 shadow-2xl relative overflow-hidden">
             <div className="absolute top-0 right-0 w-32 h-32 bg-amber-accent/5 blur-3xl rounded-full" />
             <h2 className="text-3xl md:text-5xl text-white relative z-10">The Solution</h2>
-            
             <div className="space-y-10 relative z-10">
               <div className="space-y-3">
                 <div className="w-8 h-px bg-amber-accent/50 group-hover:w-16 transition-all duration-700" />
@@ -190,30 +161,21 @@ export default function App() {
         </div>
       </section>
 
-      {/* Cinematic Break - Direct Video Background with Scroll-Synced Playback */}
-      <section 
-        ref={videoSectionRef}
-        className="relative h-[40vh] min-h-[25rem] w-full overflow-hidden flex items-center justify-center bg-navy"
-      >
-        <motion.div 
-          style={{ scale: videoScale, opacity: videoOpacity }}
-          className="absolute inset-0 w-full h-full flex items-center justify-center bg-black"
-        >
-          {/* Direct Video Element for Instant Scroll Sync */}
+      {/* Cinematic Break - Looping Video Background */}
+      <section className="relative h-[40vh] min-h-[25rem] w-full overflow-hidden flex items-center justify-center bg-navy">
+        <div className="absolute inset-0 w-full h-full bg-black">
           <video
-            ref={videoElementRef}
             src="https://rsxtgvhubpuujtdsbvtj.supabase.co/storage/v1/object/public/landing%20page/Firefly%20use%20the%20attached%20image%20to%20animate%20the%20fire%20and%20smoke%20679058.mp4"
             className="absolute w-full h-full object-cover pointer-events-none opacity-90"
+            autoPlay
+            loop
             muted
             playsInline
             preload="auto"
           />
-        </motion.div>
-
-        {/* Overlays */}
+        </div>
         <div className="absolute inset-0 bg-navy/60 mix-blend-multiply" />
         <div className="absolute inset-0 bg-gradient-to-t from-navy via-transparent to-navy/40" />
-        
         <div className="relative z-10 max-w-6xl px-8 text-center space-y-6">
           <h2 className="text-white leading-none drop-shadow-2xl">
             THE INTERVIEW <br />
@@ -223,11 +185,10 @@ export default function App() {
         </div>
       </section>
 
-      {/* Who It's For - Advanced Cards */}
+      {/* Who It's For */}
       <section className="py-24 md:py-32 px-8 md:px-16 flex flex-col lg:flex-row gap-8 bg-navy relative overflow-hidden items-center justify-center">
         <div className="absolute -top-24 -left-24 w-96 h-96 bg-amber-accent/5 blur-3xl rounded-full" />
         
-        {/* Entry-Level */}
         <div className="relative group p-8 md:p-12 bg-white/[0.02] border border-white/5 hover:border-amber-accent/50 transition-all duration-700 overflow-hidden max-w-xl flex-1">
           <div className="absolute top-0 right-0 p-4 font-mono text-[10px] text-white/10 uppercase">CAT_ENTRY</div>
           <div className="space-y-10">
@@ -249,8 +210,7 @@ export default function App() {
           </div>
         </div>
         
-        {/* Lateral & Promotional */}
-        <div className="relative group p-8 md:p-12 bg-white/[0.02] border border-white/5 hover:border-amber-accent/50 transition-all duration-700 overflow-hidden max-w-xl flex-1 h-full">
+        <div className="relative group p-8 md:p-12 bg-white/[0.02] border border-white/5 hover:border-amber-accent/50 transition-all duration-700 overflow-hidden max-w-xl flex-1">
           <div className="absolute top-0 right-0 p-4 font-mono text-[10px] text-white/10 uppercase">CAT_PROM</div>
           <div className="space-y-10">
             <h3 className="text-white group-hover:text-amber-accent transition-colors duration-500">Lateral & <br />Promotional</h3>
@@ -272,7 +232,7 @@ export default function App() {
         </div>
       </section>
 
-      {/* Transformation Bridge - Linking Candidates to CTA */}
+      {/* Transformation Bridge */}
       <section className="bg-navy py-16 border-y border-white/5 relative overflow-hidden">
         <div className="max-w-4xl mx-auto px-8 relative z-10">
           <div className="flex flex-col md:flex-row items-center justify-center gap-10 md:gap-4">
@@ -308,13 +268,12 @@ export default function App() {
           </div>
         </div>
         
-        {/* Subtle background text for thematic depth */}
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-[0.03] select-none">
           <span className="text-[15vw] font-black text-white whitespace-nowrap tracking-tighter uppercase">Get Hired</span>
         </div>
       </section>
 
-      {/* Final CTA - The High-Stakes Close */}
+      {/* Final CTA */}
       <section className="relative py-24 px-8 text-center bg-surface grid-pattern border-t border-white/5">
         <div className="max-w-3xl mx-auto space-y-8">
           <div className="space-y-2">
